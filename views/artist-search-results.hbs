@@ -1,9 +1,5 @@
 {{#each artistResults }}
     <p>{{name}}</p>
-    {{!-- <p>{{images}}</p> --}}
     <div><img src="{{images.0.url}}" alt="imgs"/></div>
-
-    <a href="#">View Albums</a>
+    <a href="/albums/{{id}}">View Albums</a>
 {{/each}}
-
-{{!-- /albums/someArtistIdGoesHere --}}

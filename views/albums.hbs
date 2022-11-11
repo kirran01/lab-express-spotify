@@ -1,5 +1,6 @@
+
 {{#each albumList }}
     <p>{{name}}</p>
-    <p>{{images}}</p>
-    <a href="{{id}}">View Albums</a>
+    <div><img src="{{images.0.url}}" alt="albumimgs"/></div>
+    <a href="/tracklist/{{id}}">View Album</a>
 {{/each}}

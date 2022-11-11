@@ -23,16 +23,13 @@ spotifyApi
   );
 
 app.get("/", (req, res) => {
-  console.log("req.params:", req.params);
   res.render("index.hbs");
 });
 
 app.get("/artist-search", (req, res, next) => {
-  console.log("req.query:", req.query);
   spotifyApi
     .searchArtists(req.query.artist)
     .then((data) => {
-      console.log("data.body.artists: ", data.body.artists);
       let artistResults = data.body.artists.items;
       res.render("artist-search-results.hbs", { artistResults });
     })
@@ -43,12 +40,27 @@ app.get("/artist-search", (req, res, next) => {
 
 app.get("/albums/:artistId", (req, res, next) => {
   spotifyApi
-    .getArtistAlbums(req.params.artistId, { limit: 10 })
+    .getArtistAlbums(req.params.artistId)
     .then((data) => {
-      let albumList = data.body.albums;
-      res.render({ albumList });
-    });
+      let albumList = data.body.items;
+      res.render("albums", { albumList });
+    })
+    .catch((err) =>
+      console.log("The error while searching artists occurred: ", err)
+    );
 });
+
+app.get("/tracklist/:albumId", (req, res, next) => {
+    spotifyApi
+      .getAlbumTracks(req.params.albumId)
+      .then((data) => {
+        let tracks = data.body.items;
+        res.render("tracklist", { tracks });
+      })
+      .catch((err) =>
+        console.log("The error while searching artists occurred: ", err)
+      );
+  });
 
 app.listen(3000, () =>
   console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
