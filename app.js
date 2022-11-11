@@ -22,9 +22,23 @@ spotifyApi
     console.log("Something went wrong when retrieving an access token", error)
   );
 
-app.get("/artist-search", (req, res) => {
+app.get("/", (req, res) => {
   console.log("route params:", req.params);
-  res.render('index.hbs')
+  res.render("index.hbs");
+});
+
+app.get("/artist-search", (req, res, next) => {
+  console.log("query string from input html is ", req.query);
+  spotifyApi
+    .searchArtists(req.query.artist)
+    .then((data) => {
+      console.log("The received data from the API: ", data.body.artists);
+       let artistResults = data.body.artists.items
+      res.render("artist-search-results.hbs", {artistResults});
+    })
+    .catch((err) =>
+      console.log("The error while searching artists occurred: ", err)
+    );
 });
 
 app.listen(3000, () =>
