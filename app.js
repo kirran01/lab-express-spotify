@@ -23,22 +23,31 @@ spotifyApi
   );
 
 app.get("/", (req, res) => {
-  console.log("route params:", req.params);
+  console.log("req.params:", req.params);
   res.render("index.hbs");
 });
 
 app.get("/artist-search", (req, res, next) => {
-  console.log("query string from input html is ", req.query);
+  console.log("req.query:", req.query);
   spotifyApi
     .searchArtists(req.query.artist)
     .then((data) => {
-      console.log("The received data from the API: ", data.body.artists);
-       let artistResults = data.body.artists.items
-      res.render("artist-search-results.hbs", {artistResults});
+      console.log("data.body.artists: ", data.body.artists);
+      let artistResults = data.body.artists.items;
+      res.render("artist-search-results.hbs", { artistResults });
     })
     .catch((err) =>
       console.log("The error while searching artists occurred: ", err)
     );
+});
+
+app.get("/albums/:artistId", (req, res, next) => {
+  spotifyApi
+    .getArtistAlbums(req.params.artistId, { limit: 10 })
+    .then((data) => {
+      let albumList = data.body.albums;
+      res.render({ albumList });
+    });
 });
 
 app.listen(3000, () =>
